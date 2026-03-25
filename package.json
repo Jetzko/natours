@@ -54,5 +54,9 @@
   },
   "engines": {
     "node": "^10"
-  }
+  },
+  "overrides": {
+  "bson": "4.7.2",
+  "sharp": "0.25.4"
+}
 }
