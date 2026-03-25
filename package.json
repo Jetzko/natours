@@ -53,13 +53,14 @@
     "prettier": "^1.17.0"
   },
   "engines": {
-    "node": "^14.x"
+    "node": "14.x"
   },
   "overrides": {
-  "bson": "4.7.2",
-  "sharp": "0.25.4"
-},
-"resolutions": {
-  "bson": "4.7.2"
-}
+    "bson": "4.7.2",
+    "sharp": "0.25.4"
+  },
+  "resolutions": {
+    "bson": "4.7.2",
+    "sharp": "0.25.4"
+  }
 }
