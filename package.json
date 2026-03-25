@@ -56,10 +56,9 @@
     "node": "14.x"
   },
   "overrides": {
-    "bson": "4.7.2"
-    
+    "bson": "1.1.6"
   },
   "resolutions": {
-    "bson": "4.7.2"
+    "bson": "1.1.6"
   }
 }
