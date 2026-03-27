@@ -1,6 +1,6 @@
 // const APIFeatures = require('../utils/apiFeatures');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const AppError = require('../utils/appError');
+// const AppError = require('../utils/appError');
 const factory = require('./handlerFactory');
 const catchAsync = require('../utils/catchAsync');
 const Tour = require('../models/tourModel');
@@ -27,21 +27,25 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
           product_data: {
             name: `${tour.name} Tour`,
             description: tour.summary,
-            images: ['https://natours.dev/img/tours/tour-1-cover.jpg'],
+            images: [
+              `${req.protocol}://${req.get('host')}/img/tours/${
+                tour.imageCover
+              }`
+            ]
           },
           currency: 'usd',
-          unit_amount: tour.price * 100,
+          unit_amount: tour.price * 100
         },
-        quantity: 1,
-      },
+        quantity: 1
+      }
     ],
-    mode: 'payment',
+    mode: 'payment'
   });
 
   // 3) Create session as response
   res.status(200).json({
     status: 'success',
-    session,
+    session
   });
 });
 
@@ -55,7 +59,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 //   res.redirect(req.originalUrl.split('?')[0]);
 // });
 
-const createBookingCheckout = async (session) => {
+const createBookingCheckout = async session => {
   const tour = session.client_reference_id;
   const user = (await User.findOne({ email: session.customer_email })).id;
   const price = session.line_items[0].price_data.unit_amount / 100;
@@ -69,13 +73,13 @@ exports.webhookCheckout = (req, res, next) => {
     event = stripe.webhooks.constructEvent(
       req.body,
       signature,
-      process.env.STRIPE_WEBHOOK_SECRET,
+      process.env.STRIPE_WEBHOOK_SECRET
     );
   } catch (err) {
     return res.status(400).send(`Webhook error: ${err.message}`);
   }
 
-  if (event.type === 'checkout.session.complete')
+  if (event.type === 'checkout.session.completed')
     createBookingCheckout(event.data.object);
 
   res.status(200).json({ received: true });
