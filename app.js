@@ -2,7 +2,7 @@ const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
-const helmet = require('helmet');
+// const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
@@ -127,14 +127,14 @@ if (process.env.NODE_ENV === 'development') {
 const limiter = rateLimit({
   max: 100,
   windowMs: 60 * 60 * 1000,
-  message: 'Too many requests from this IP! please try again in an hour.',
+  message: 'Too many requests from this IP! please try again in an hour.'
 });
 app.use('/api', limiter);
 
 app.post(
   '/webhook-checkout',
   express.raw({ type: 'application/json' }),
-  bookingController.webhookCheckout,
+  bookingController.webhookCheckout
 );
 
 // Body parser, reading data from body into req.body
@@ -157,9 +157,9 @@ app.use(
       'ratingsQuantity',
       'maxGroupSize',
       'difficulty',
-      'price',
-    ],
-  }),
+      'price'
+    ]
+  })
 );
 
 app.use(compression());
