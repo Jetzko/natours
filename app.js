@@ -8,6 +8,7 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
+const cors = require('cors');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -21,10 +22,20 @@ const app = express();
 
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
+
+// 1) Global Middleweres
+// Implementing CORS
+//Access-COntrol-Allow-Origin
+app.use(cors());
+// app.use(cors({
+// origin: 'https://www.natours.com'
+// }))
+app.options('*', cors());
+// app.options('/api/v1/tours/:id', cors());
+
 // Serving static files
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 1) Global Middleweres
 // Set security HTTP headers
 // app.use(
 //   helmet.contentSecurityPolicy({
@@ -115,7 +126,7 @@ if (process.env.NODE_ENV === 'development') {
 const limiter = rateLimit({
   max: 100,
   windowMs: 60 * 60 * 1000,
-  message: 'Too many requests from this IP! please try again in an hour.'
+  message: 'Too many requests from this IP! please try again in an hour.',
 });
 app.use('/api', limiter);
 
@@ -139,9 +150,9 @@ app.use(
       'ratingsQuantity',
       'maxGroupSize',
       'difficulty',
-      'price'
-    ]
-  })
+      'price',
+    ],
+  }),
 );
 
 app.use(compression());
